@@ -75,8 +75,8 @@ Anyway...
 
 Containment:
 ```lua
-type.lt(obj, obj1): 				true (obj is a subset of obj1)
-type.lt(obj1, obj): 				false
+type.lt(obj, obj1): 			true --(obj is a subset of obj1)
+type.lt(obj1, obj): 			false
 type.get(obj)	<=	type.get(obj1):	true
 type.get(obj)	>=	type.get(obj1):	false 
 type.get(obj1)	<=	type.get(obj):	false 
@@ -107,9 +107,9 @@ What happens if we try equality?
 Containment with another couple of objects:
 ```lua
 type.eq(number_t, fraction_t): 	true
-number_t == fraction_t:			true
+number_t == fraction_t:		true
 type.lt(number_t, fraction_t):	false
-type.eq(3, fraction_t):			true
+type.eq(3, fraction_t):		true
 ```
 **WARNING!!** this last test is tricky. We use the fact that weak_type will promote
 an object (3) to a type, if it is not a type object. DO NOT think that it will turn...
@@ -123,8 +123,8 @@ Even unrelated things work as they should!
 ```lua
 	local pop_t = type.new{"pop", "bang", "dazzle"}
 
-	type.lt(pop_t, test_t):	false
-	type.lt(test_t, pop_t):	false
+	type.lt(pop_t, test_t):		false
+	type.lt(test_t, pop_t):		false
 	test_t	<=	pop_t:		false
 	test_t	>=	pop_t:		false
 	pop_t	<=	test_t:		false 
@@ -158,9 +158,9 @@ You have int64, so allow me to demonstration:
 local int64 = pcall(require, 'int64')
 local int3 = int64.new(3)
 
-type(int3):					userdata
+type(int3):			userdata
 type(int3, "number"):		int64, number
-type.lt(3, int3):			false
+type.lt(3, int3):		false
 ```
 
 *...Wait.. why?*
@@ -175,8 +175,8 @@ local number_t = type.new{"number", table = false}
 then...
 
 ```lua
-	type.lt(3, int3):					true
-	type.lt(int3, 3):					false
+	type.lt(3, int3):			true
+	type.lt(int3, 3):			false
 	type.lt(type.find"userdata", int3):	true
 ```
 
@@ -188,30 +188,30 @@ Use lt to see if an object can 'behave' like something, even with native types.
 	
 	type.get(3) <= type.get(obj4):	true
 	type.get(3) >= type.get(obj4):	false
-	type.lt(3, obj4):				true
-	type.lt(obj4, 3):				false
-	type(obj4, "number"): 			int64, number
+	type.lt(3, obj4):		true
+	type.lt(obj4, 3):		false
+	type(obj4, "number"):		int64, number
 ```
 
 Again, all of this works (mostly) like normal, too:
 
 ```lua
-	type("Hello, word!"): string
-	type(2): number 
-	type(nil): nil
+type("Hello, word!"): 	string
+type(2): 		number 
+type(nil): 		nil
 ```
 The 'mostly' is that regular type will error on a call like this:
 ```lua
-	type()
+type()
 ```
 or this...
 
 ```lua
-	local f = function()
-		return
-	end
+local f = function()
+	return
+end
 
-	type(f())
+type(f()) --> ESPLODE... as Strong Bad says.
 ```
 
 It might not seem completely obvious why this ever comes up, 
@@ -221,12 +221,12 @@ an argument list with `select`.
 So, instead, this is how it works:
 
 ```lua
-	type(f()): 									undefined, nil
-	type(f(), "nil"):							nil, nil
-	type(f(), "undefined"):						false					
-	type.eq(f(), type.find"nil"): 				true
-	type.lt(f(), type.find"nil"):				false
-	type.lt(f(), type.find"undefined"):			true
+	type(f()): 				undefined, nil
+	type(f(), "nil"):			nil, nil
+	type(f(), "undefined"):			false					
+	type.eq(f(), type.find"nil"): 		true
+	type.lt(f(), type.find"nil"):		false
+	type.lt(f(), type.find"undefined"):	true
 ```
 
 The reason for the above behavior is discovered in the way that Lua adds
